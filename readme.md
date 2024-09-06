@@ -14,7 +14,7 @@ This project provides a simplified Dropbox-like service implemented in Spring Bo
 
 ### Prerequisites
 
-- Java 11 or higher
+- Java 17 or higher
 - Maven 3.6 or higher
 - Docker (for Docker setup)
 
