@@ -17,15 +17,16 @@ import lombok.Data;
 @DynamicUpdate
 public class FileMetadata {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String fileName;
+	private String fileName;
 
-    private String fileType;
+	private String fileType;
 
-    private Long size;
+	private Long size;
 
-    private LocalDateTime createdAt;
+	private LocalDateTime createdAt;
+
 }

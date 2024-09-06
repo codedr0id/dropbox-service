@@ -7,4 +7,5 @@ import com.dropbox.app.model.FileMetadata;
 
 @Repository
 public interface FileMetadataRepository extends JpaRepository<FileMetadata, Long> {
+
 }
