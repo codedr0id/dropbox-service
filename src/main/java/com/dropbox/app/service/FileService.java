@@ -21,71 +21,71 @@ import com.dropbox.app.repository.FileMetadataRepository;
 @Service
 public class FileService {
 
-    @Autowired
-    private FileMetadataRepository fileMetadataRepository;
+	@Autowired
+	private FileMetadataRepository fileMetadataRepository;
 
-    @Value("${file.storage.path}")
-    private String storagePath;
+	@Value("${file.storage.path}")
+	private String storagePath;
 
-    public FileMetadata storeFile(MultipartFile file) throws IOException {
-        Path path = Paths.get(storagePath + File.separator + file.getOriginalFilename());
-        Files.write(path, file.getBytes());
+	public FileMetadata storeFile(MultipartFile file) throws IOException {
+		Path path = Paths.get(storagePath + File.separator + file.getOriginalFilename());
+		Files.write(path, file.getBytes());
 
-        // Save metadata to DB
-        FileMetadata metadata = new FileMetadata();
-        metadata.setFileName(file.getOriginalFilename());
-        metadata.setFileType(file.getContentType());
-        metadata.setSize(file.getSize());
-        metadata.setCreatedAt(LocalDateTime.now());
-        metadata.setUpdatedAt(LocalDateTime.now());
+		// Save metadata to DB
+		FileMetadata metadata = new FileMetadata();
+		metadata.setFileName(file.getOriginalFilename());
+		metadata.setFileType(file.getContentType());
+		metadata.setSize(file.getSize());
+		metadata.setCreatedAt(LocalDateTime.now());
+		metadata.setUpdatedAt(LocalDateTime.now());
 
-        return fileMetadataRepository.save(metadata);
-    }
+		return fileMetadataRepository.save(metadata);
+	}
 
-    public FileMetadata getFileMetadata(Long fileId) throws FileNotFoundException {
-        return fileMetadataRepository.findById(fileId)
-                .orElseThrow(() -> new FileNotFoundException("File not found with id: " + fileId));
-    }
+	public FileMetadata getFileMetadata(Long fileId) throws FileNotFoundException {
+		return fileMetadataRepository.findById(fileId)
+			.orElseThrow(() -> new FileNotFoundException("File not found with id: " + fileId));
+	}
 
-    public Resource getFile(Long fileId) throws FileNotFoundException, MalformedURLException {
-        FileMetadata metadata = fileMetadataRepository.findById(fileId)
-                .orElseThrow(() -> new FileNotFoundException("File not found"));
+	public Resource getFile(Long fileId) throws FileNotFoundException, MalformedURLException {
+		FileMetadata metadata = fileMetadataRepository.findById(fileId)
+			.orElseThrow(() -> new FileNotFoundException("File not found"));
 
-        Path filePath = Paths.get(storagePath + File.separator + metadata.getFileName());
-        return new UrlResource(filePath.toUri());
-    }
+		Path filePath = Paths.get(storagePath + File.separator + metadata.getFileName());
+		return new UrlResource(filePath.toUri());
+	}
 
-    public Iterable<FileMetadata> listAllFiles() {
-        return fileMetadataRepository.findAll();
-    }
+	public Iterable<FileMetadata> listAllFiles() {
+		return fileMetadataRepository.findAll();
+	}
 
-    public FileMetadata updateFile(Long fileId, MultipartFile newFile) throws IOException {
-        FileMetadata existingMetadata = fileMetadataRepository.findById(fileId)
-                .orElseThrow(() -> new FileNotFoundException("File not found with id: " + fileId));
+	public FileMetadata updateFile(Long fileId, MultipartFile newFile) throws IOException {
+		FileMetadata existingMetadata = fileMetadataRepository.findById(fileId)
+			.orElseThrow(() -> new FileNotFoundException("File not found with id: " + fileId));
 
-        Path filePath = Paths.get(storagePath + File.separator + existingMetadata.getFileName());
-        Files.deleteIfExists(filePath);
+		Path filePath = Paths.get(storagePath + File.separator + existingMetadata.getFileName());
+		Files.deleteIfExists(filePath);
 
-        Path newFilePath = Paths.get(storagePath + File.separator + newFile.getOriginalFilename());
-        Files.write(newFilePath, newFile.getBytes());
+		Path newFilePath = Paths.get(storagePath + File.separator + newFile.getOriginalFilename());
+		Files.write(newFilePath, newFile.getBytes());
 
-        // Update file metadata in DB
-        existingMetadata.setFileName(newFile.getOriginalFilename());
-        existingMetadata.setFileType(newFile.getContentType());
-        existingMetadata.setSize(newFile.getSize());
-        existingMetadata.setUpdatedAt(LocalDateTime.now());
+		// Update file metadata in DB
+		existingMetadata.setFileName(newFile.getOriginalFilename());
+		existingMetadata.setFileType(newFile.getContentType());
+		existingMetadata.setSize(newFile.getSize());
+		existingMetadata.setUpdatedAt(LocalDateTime.now());
 
-        return fileMetadataRepository.save(existingMetadata);
-    }
+		return fileMetadataRepository.save(existingMetadata);
+	}
 
-    public void deleteFile(Long fileId) throws IOException {
-        FileMetadata fileMetadata = fileMetadataRepository.findById(fileId)
-                .orElseThrow(() -> new FileNotFoundException("File not found with id: " + fileId));
+	public void deleteFile(Long fileId) throws IOException {
+		FileMetadata fileMetadata = fileMetadataRepository.findById(fileId)
+			.orElseThrow(() -> new FileNotFoundException("File not found with id: " + fileId));
 
-        Path filePath = Paths.get(storagePath + File.separator + fileMetadata.getFileName());
-        Files.deleteIfExists(filePath);
+		Path filePath = Paths.get(storagePath + File.separator + fileMetadata.getFileName());
+		Files.deleteIfExists(filePath);
 
-        fileMetadataRepository.delete(fileMetadata);
-    }
+		fileMetadataRepository.delete(fileMetadata);
+	}
 
 }
