@@ -81,3 +81,42 @@ This project provides a simplified Dropbox-like service implemented in Spring Bo
    docker-compose up --build
 
    ```
+
+## cURLs
+
+### Upload File API
+
+```sh
+curl --location 'http://localhost:8080/files/upload' \
+--form 'file=@"/Users/mehullathi/Downloads/Itinerary.pdf"'
+
+```
+
+### Get File API
+
+```sh
+curl --location 'http://localhost:8080/files/1'
+
+```
+
+### List Files API
+
+```sh
+curl --location 'http://localhost:8080/files'
+
+```
+
+### Update File API
+
+```sh
+curl --location --request PUT 'http://localhost:8080/files/update/1' \
+--form 'file=@"/Users/mehullathi/Downloads/app.zip"'
+
+```
+
+### Delete File API
+
+```sh
+curl --location --request DELETE 'http://localhost:8080/files/delete/1'
+
+```
