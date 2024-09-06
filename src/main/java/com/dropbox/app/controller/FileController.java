@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,6 +56,23 @@ public class FileController {
     public ResponseEntity<Iterable<FileMetadata>> listAllFiles() {
         Iterable<FileMetadata> files = fileService.listAllFiles();
         return new ResponseEntity<>(files, HttpStatus.OK);
+    }
+
+    // UPDATE File API
+    @PutMapping("/{fileId}")
+    public ResponseEntity<FileMetadata> updateFile(
+            @PathVariable Long fileId,
+            @RequestParam("file") MultipartFile newFile) throws IOException {
+
+        FileMetadata updatedMetadata = fileService.updateFile(fileId, newFile);
+        return new ResponseEntity<>(updatedMetadata, HttpStatus.OK);
+    }
+
+    // DELETE File API
+    @DeleteMapping("/{fileId}")
+    public ResponseEntity<String> deleteFile(@PathVariable Long fileId) throws IOException {
+        fileService.deleteFile(fileId);
+        return new ResponseEntity<>("File deleted successfully", HttpStatus.OK);
     }
 
 }

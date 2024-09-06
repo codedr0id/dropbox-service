@@ -29,4 +29,6 @@ public class FileMetadata {
 
 	private LocalDateTime createdAt;
 
+	private LocalDateTime updatedAt;
+
 }
